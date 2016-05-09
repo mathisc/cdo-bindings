@@ -241,8 +241,7 @@ class TestCdo < Minitest::Test
     @cdo.debug = true
     topo = @cdo.topo(:options => '-f nc',:returnMaArray => 'topo')
     assert_equal(-1890.0,topo.mean.round)
-    bathy = @cdo.setrtomiss(0,10000,
-        :input => @cdo.topo(:options => '-f nc'),:returnMaArray => 'topo')
+    bathy = @cdo.setrtomiss(0,10000, :input => @cdo.topo(:options => '-f nc'),:returnMaArray => 'topo')
     assert_equal(-3386.0,bathy.mean.round)
     oro = @cdo.setrtomiss(-10000,0,
         :input => @cdo.topo(:options => '-f nc'),:returnMaArray => 'topo')
@@ -250,13 +249,6 @@ class TestCdo < Minitest::Test
     bathy = @cdo.remapnn('r2x2',:input => @cdo.topo(:options => '-f nc'), :returnMaArray => 'topo')
     assert_equal(-4298.0,bathy[0,0])
     assert_equal(-2669.0,bathy[1,0])
-    ta = @cdo.remapnn('r2x2',:input => @cdo.topo(:options => '-f nc'))
-    tb = @cdo.subc(-2669.0,:input => ta)
-    withMask = @cdo.div(:input => ta+" "+tb,:returnMaArray => 'topo')
-    assert(-8.0e+33 > withMask[1,0])
-    assert(0 < withMask[0,0])
-    assert(0 < withMask[0,1])
-    assert(0 < withMask[1,1])
   end
 
   def test_errorException
@@ -351,9 +343,9 @@ class TestCdo < Minitest::Test
       arOrg = @cdo.setrtomiss(missRange,:input => cdf.path,:returnMaArray => 'v')
       arFm  = @cdo.fillmiss(:input => "-setrtomiss,#{missRange} #{cdf.path}",:returnMaArray => 'v')
       arFm1s= @cdo.fillmiss2(:input => "-setrtomiss,#{missRange} #{cdf.path}",:returnMaArray => 'v')
-      vOrg  = arOrg[0,0..-1]
-      vFm   = arFm[0,0..-1]
-      vFm1s = arFm1s[0,0..-1]
+      vOrg  = arOrg#[0,0..-1]
+      vFm   = arFm#[0,0..-1]
+      vFm1s = arFm1s#[0,0..-1]
       UnifiedPlot.linePlot([{:y => vOrg, :style => 'line',:title => 'org'},
                             {:y => vFm,  :style => 'points',:title => 'fillmiss'},
                             {:y => vFm1s,:style => 'points',:title => 'fillmiss2'}],
@@ -370,9 +362,9 @@ class TestCdo < Minitest::Test
       arOrg = @cdo.setrtomiss(missRange,:input => cdf.path,:returnMaArray => 'v')
       arFm  = @cdo.fillmiss(:input => "-setrtomiss,#{missRange} #{cdf.path}",:returnMaArray => 'v')
       arFm1s= @cdo.fillmiss2(:input => "-setrtomiss,#{missRange} #{cdf.path}",:returnMaArray => 'v')
-      vOrg  =  arOrg[0..-1,0]
-      vFm   =   arFm[0..-1,0]
-      vFm1s = arFm1s[0..-1,0]
+      vOrg  =  arOrg#[0..-1,0]
+      vFm   =   arFm#[0..-1,0]
+      vFm1s = arFm1s#[0..-1,0]
       UnifiedPlot.linePlot([{:y => vOrg, :style => 'line',:title => 'org'},
                             {:y => vFm,  :style => 'points',:title => 'fillmiss'},
                             {:y => vFm1s,:style => 'points',:title => 'fillmiss2'}],

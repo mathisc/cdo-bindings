@@ -193,7 +193,7 @@ class Cdo
   # load the netcdf bindings
   def loadCdf
     begin
-      require "numru/netcdf_miss"
+      require "numru/netcdf"
     rescue LoadError
       warn "Could not load ruby's netcdf bindings. Please install it."
       raise
@@ -269,8 +269,16 @@ class Cdo
   def readMaArray(iFile,varname)
     filehandle = readCdf(iFile)
     if filehandle.var_names.include?(varname)
-      # return the data array
-      filehandle.var(varname).get_with_miss
+      # check existing FillValue
+      var     = filehandle.var(varname)
+      varData = var.get
+      if var.att_names.include?('_FillValue') then
+        fillValue = var.att('_FillValue').get
+        mask = varData.ne fillValue
+        return varData[mask]
+      else
+        return varData
+      end
     else
       raise ArgumentError,"Cannot find variable '#{varname}'"
     end
