@@ -1016,6 +1016,11 @@ class CdoTest(testClass):
             input = "-setname,tmax -setctomiss,-999.99 -input,{} tmax.nc < ".format(gridfile),
             output = inputfile)
 
+      def test_const_return(self):
+        cdo       = Cdo()
+        cdo.debug = True
+        self.assertTrue(type(cdo.const('1,r1x1')) == str, 'return value is not a string/filename')
+
 #===============================================================================
 if __name__ == '__main__':
     suite = testLoader.loadTestsFromTestCase(CdoTest)
